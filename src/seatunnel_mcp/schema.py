@@ -48,7 +48,10 @@ class SubmitJobRequest(BaseModel):
 
     job_content: str = Field(..., description="Job configuration content in specified format")
     jobName: Optional[str] = Field(None, description="Optional job name")
-    jobId: Optional[Union[str, int]] = Field(None, description="Optional job ID. Can be a string or integer.")
+    jobId: Optional[str] = Field(
+        None,
+        description="Optional job ID as a string to avoid precision loss in large numeric IDs.",
+    )
     is_start_with_save_point: Optional[bool] = Field(None, description="Whether to start with savepoint")
     format: str = Field("hocon", description="Job configuration format (hocon, json, yaml)")
 
@@ -58,7 +61,10 @@ class SubmitJobUploadRequest(BaseModel):
 
     config_file: Union[str, Any] = Field(..., description="Configuration file path or file object (multipart/form-data body parameter)")
     jobName: Optional[str] = Field(None, description="Optional job name (query parameter)")
-    jobId: Optional[Union[str, int]] = Field(None, description="Optional job ID (query parameter). Can be a string or integer.")
+    jobId: Optional[str] = Field(
+        None,
+        description="Optional job ID (query parameter) as a string to avoid precision loss in large numeric IDs.",
+    )
     is_start_with_save_point: Optional[bool] = Field(None, description="Whether to start with savepoint (query parameter)")
     format: Optional[str] = Field(None, description="Job configuration format (hocon, json, yaml) (query parameter). If not provided, determined from the file name")
 
@@ -72,14 +78,14 @@ class SubmitJobsRequest(BaseModel):
 class StopJobRequest(BaseModel):
     """Request for stopping a job."""
 
-    jobId: Union[str, int] = Field(..., description="Job ID")
+    jobId: str = Field(..., description="Job ID as a string to avoid precision loss in large numeric IDs.")
     isStartWithSavePoint: bool = Field(False, description="Whether to stop with savepoint")
 
 
 class JobInfoRequest(BaseModel):
     """Request for getting job information."""
 
-    jobId: Union[str, int] = Field(..., description="Job ID")
+    jobId: str = Field(..., description="Job ID as a string to avoid precision loss in large numeric IDs.")
 
 
 class FinishedJobsRequest(BaseModel):

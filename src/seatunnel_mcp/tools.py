@@ -232,7 +232,7 @@ def get_job_info_tool(client: SeaTunnelClient) -> Callable:
     Returns:
         Function that can be registered as a tool.
     """
-    async def get_job_info(jobId: Union[str, int]) -> Dict[str, Any]:
+    async def get_job_info(jobId: str) -> Dict[str, Any]:
         """Get information about a job.
 
         Args:
@@ -259,7 +259,7 @@ def get_running_job_tool(client: SeaTunnelClient) -> Callable:
     Returns:
         Function that can be registered as a tool.
     """
-    async def get_running_job(jobId: Union[str, int]) -> Dict[str, Any]:
+    async def get_running_job(jobId: str) -> Dict[str, Any]:
         """Get information about a running job.
 
         Args:
@@ -320,6 +320,9 @@ def get_finished_jobs_tool(client: SeaTunnelClient) -> Callable:
             Response from the API.
         """
         result = client.get_finished_jobs(state=state)
+        # Normalize list responses to a dict to satisfy tool schema expectations.
+        if isinstance(result, list):
+            return {"result": result}
         return result
     
     get_finished_jobs.__name__ = "get-finished-jobs"
